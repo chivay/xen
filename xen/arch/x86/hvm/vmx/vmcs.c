@@ -276,10 +276,10 @@ static int vmx_init_vmcs_config(void)
            CPU_BASED_MONITOR_EXITING |
            CPU_BASED_MWAIT_EXITING |
            CPU_BASED_MOV_DR_EXITING |
-           CPU_BASED_ACTIVATE_IO_BITMAP |
            CPU_BASED_USE_TSC_OFFSETING |
            CPU_BASED_RDTSC_EXITING);
     opt = (CPU_BASED_ACTIVATE_MSR_BITMAP |
+           CPU_BASED_ACTIVATE_IO_BITMAP |
            CPU_BASED_TPR_SHADOW |
            CPU_BASED_MONITOR_TRAP_FLAG |
            CPU_BASED_ACTIVATE_SECONDARY_CONTROLS);
@@ -1168,8 +1168,10 @@ static int construct_vmcs(struct vcpu *v)
     }
 
     /* I/O access bitmap. */
-    __vmwrite(IO_BITMAP_A, __pa(d->arch.hvm.io_bitmap));
-    __vmwrite(IO_BITMAP_B, __pa(d->arch.hvm.io_bitmap) + PAGE_SIZE);
+    if ( cpu_has_vmx_io_bitmap ) {
+        __vmwrite(IO_BITMAP_A, __pa(d->arch.hvm.io_bitmap));
+        __vmwrite(IO_BITMAP_B, __pa(d->arch.hvm.io_bitmap) + PAGE_SIZE);
+    }
 
     if ( cpu_has_vmx_virtual_intr_delivery )
     {

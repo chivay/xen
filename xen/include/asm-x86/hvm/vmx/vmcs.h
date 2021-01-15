@@ -342,6 +342,8 @@ extern u64 vmx_ept_vpid_cap;
     (vmx_secondary_exec_control & SECONDARY_EXEC_XSAVES)
 #define cpu_has_vmx_tsc_scaling \
     (vmx_secondary_exec_control & SECONDARY_EXEC_TSC_SCALING)
+#define cpu_has_vmx_io_bitmap \
+    (vmx_cpu_based_exec_control & CPU_BASED_ACTIVATE_IO_BITMAP)
 
 #define VMCS_RID_TYPE_MASK              0x80000000
 
